@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using LoginformSession.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace LoginformSession.Controllers
 {
@@ -15,9 +16,18 @@ namespace LoginformSession.Controllers
 
         public IActionResult Index()
         {
+            HttpContext.Session.SetString("SessionKey", "Session");
             return View();
         }
 
+        public IActionResult About()
+        {
+            if (HttpContext.Session.GetString("SessionKey") != null)
+            {
+                ViewBag.SessionValue = HttpContext.Session.GetString("SessionKey");
+            }
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
