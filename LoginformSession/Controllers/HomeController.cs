@@ -8,35 +8,70 @@ namespace LoginformSession.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MyDbContext context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MyDbContext context)
         {
             _logger = logger;
+            this.context = context;
         }
 
         public IActionResult Index()
         {
-            HttpContext.Session.SetString("SessionKey", "Session");
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Dashboard()
         {
-            if (HttpContext.Session.GetString("SessionKey") != null)
+            var email = HttpContext.Session.GetString("Mysession");
+            if (email != null)
             {
-                ViewBag.SessionValue = HttpContext.Session.GetString("SessionKey");
+                ViewBag.email = email;
+                return View();
             }
-            
+            else
+            {
+                return RedirectToAction("Login");
+            }
+        }
+        public IActionResult Login()
+        { 
+            if (HttpContext.Session.GetString("Mysession") != null)
+            {
+                return RedirectToAction("Dashboard");
+            }
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Login(UserTbl user)
+        { 
+            var Userdata = context.UserTbls.Where(x => x.Email == user.Email && x.Password == user.Password).FirstOrDefault();
+            if (Userdata != null)
+            {
+                HttpContext.Session.SetString("Mysession", Userdata.Email);
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                ViewBag.message = "Invalid email or password";
+            }
+            return View();
+        }
+
+      
+       
         public IActionResult Logout()
         {
-            if (HttpContext.Session.GetString("SessionKey") != null)
+            if (HttpContext.Session.GetString("Mysession") != null)
             {
-                HttpContext.Session.Remove("SessionKey");
+                HttpContext.Session.Remove("Mysession");
+                return RedirectToAction("Login");
             }
             return View();
         }
+
+
         public IActionResult Privacy()
         {
             return View();

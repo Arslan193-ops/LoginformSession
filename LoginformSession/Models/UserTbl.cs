@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace LoginformSession.Models;
 
@@ -14,6 +15,6 @@ public partial class UserTbl
     public int Age { get; set; }
 
     public string Email { get; set; } = null!;
-
+    [DataType(DataType.Password)]
     public string Password { get; set; } = null!;
 }
