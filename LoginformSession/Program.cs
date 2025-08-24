@@ -1,13 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
-   });
+    options.IdleTimeout = TimeSpan.FromMinutes(10); // Set session timeout
+});
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+
+builder.Services.AddDbContext<LoginformSession.Models.MyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("dbcs")));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
