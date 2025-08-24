@@ -22,10 +22,19 @@ namespace LoginformSession.Controllers
 
         public IActionResult About()
         {
-            //if (HttpContext.Session.GetString("SessionKey") != null)
-            //{
-            //    ViewBag.SessionValue = HttpContext.Session.GetString("SessionKey");
-            //}
+            if (HttpContext.Session.GetString("SessionKey") != null)
+            {
+                ViewBag.SessionValue = HttpContext.Session.GetString("SessionKey");
+            }
+            
+            return View();
+        }
+        public IActionResult Logout()
+        {
+            if (HttpContext.Session.GetString("SessionKey") != null)
+            {
+                HttpContext.Session.Remove("SessionKey");
+            }
             return View();
         }
         public IActionResult Privacy()
